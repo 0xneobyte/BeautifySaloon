@@ -1,47 +1,58 @@
-import Image from "next/image";
-import Navbar from "./components/Navbar";
+import Navbar from "../components/Navbar";
 
-export default function Home() {
+export default function FaceAndBody() {
   return (
     <main>
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-pink-50 to-pink-100 py-20">
+      <section className="relative bg-gradient-to-r from-blue-300 to-blue-500 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-8">
-              Find The Best Place For Your Face And The Body!
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Explore, Choose, and Transform – Your Ideal Look Awaits!
-            </p>
+          <div className="flex flex-col md:flex-row items-center">
+            <div className="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
+              <h1 className="text-4xl font-bold text-white mb-4">
+                Find The Best Place For Your Face And Body!
+              </h1>
+              <p className="text-xl text-white mb-8">
+                Explore, Choose, and Transform – Your Ideal Look Awaits!
+              </p>
 
-            {/* Search Form */}
-            <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-lg font-semibold text-pink-500 mb-4">
-                Search and Find The Best Solution For Your need
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input
-                  type="text"
-                  placeholder="Search by Saloon Name"
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-pink-500"
-                />
-                <input
-                  type="text"
-                  placeholder="Search by location"
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-pink-500"
-                />
-                <input
-                  type="text"
-                  placeholder="Search by Postcode"
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-pink-500"
-                />
+              {/* Search Form */}
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h2 className="text-lg font-semibold text-pink-500 mb-4">
+                  Search and Find The Best Solution For Your need
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Search by Salon Name"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-pink-500"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search by location"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-pink-500"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search by Postcode"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-pink-500"
+                  />
+                </div>
+                <button className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition-colors w-full mt-4">
+                  Search
+                </button>
               </div>
-              <button className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition-colors w-full mt-4">
-                Search
-              </button>
+            </div>
+
+            <div className="md:w-1/2">
+              <div className="relative h-96 rounded-lg overflow-hidden bg-blue-300">
+                <div className="absolute inset-0 flex items-center justify-center text-white">
+                  <span className="text-2xl font-semibold">
+                    Face and Body Treatment Image
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -148,9 +159,11 @@ export default function Home() {
                 <div key={city} className="text-center">
                   <h4 className="font-semibold text-gray-900">{city}</h4>
                   <ul className="mt-2 space-y-1 text-sm text-gray-600">
-                    <li>City Center</li>
-                    <li>Suburbs</li>
-                    <li>Downtown</li>
+                    <li>Colombo</li>
+                    <li>Dehiwala</li>
+                    <li>Nugegoda</li>
+                    <li>Mount Lavinia</li>
+                    <li>Rajagiriya</li>
                   </ul>
                 </div>
               )

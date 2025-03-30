@@ -11,25 +11,30 @@ interface Params {
   };
 }
 
-// GET endpoint to retrieve a specific appointment by ID
-export async function GET(req: NextRequest, { params }: Params) {
+// GET endpoint to retrieve a specific appointment
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = params;
-
     // Get user session
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // Get appointment ID from URL parameter
+    const appointmentId = params.id;
+
     // Connect to database
     await dbConnect();
 
-    // Find appointment by ID
-    const appointment = await Appointment.findById(id)
+    // Find appointment
+    const appointment = await Appointment.findById(appointmentId)
       .populate("customer", "firstName lastName email -_id")
       .populate("salon", "name address -_id");
 
+    // Check if appointment exists
     if (!appointment) {
       return NextResponse.json(
         { error: "Appointment not found" },
@@ -38,20 +43,25 @@ export async function GET(req: NextRequest, { params }: Params) {
     }
 
     // Check if user has permission to view this appointment
-    const userIsCustomer =
-      appointment.customer._id.toString() === session.user.id;
-    let userIsSalonOwner = false;
-
     if (session.user.userType === "business") {
-      const salon = await Salon.findById(appointment.salon);
-      userIsSalonOwner = salon && salon.owner.toString() === session.user.id;
-    }
+      // Business users can only view appointments for their salons
+      const salons = await Salon.find({ owner: session.user.id }).select("_id");
+      const salonIds = salons.map((salon) => salon._id.toString());
 
-    if (!userIsCustomer && !userIsSalonOwner) {
-      return NextResponse.json(
-        { error: "You do not have permission to view this appointment" },
-        { status: 403 }
-      );
+      if (!salonIds.includes(appointment.salon._id.toString())) {
+        return NextResponse.json(
+          { error: "You don't have permission to view this appointment" },
+          { status: 403 }
+        );
+      }
+    } else {
+      // Customers can only view their own appointments
+      if (appointment.customer._id.toString() !== session.user.id) {
+        return NextResponse.json(
+          { error: "You don't have permission to view this appointment" },
+          { status: 403 }
+        );
+      }
     }
 
     return NextResponse.json({ appointment }, { status: 200 });
@@ -64,22 +74,46 @@ export async function GET(req: NextRequest, { params }: Params) {
   }
 }
 
-// PATCH endpoint to update an appointment status
-export async function PATCH(req: NextRequest, { params }: Params) {
+// PATCH endpoint to update an appointment's status
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = params;
-
     // Get user session
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // Get appointment ID from URL parameter
+    const appointmentId = params.id;
+
+    // Get request body
+    const body = await req.json();
+    const { status } = body;
+
+    // Validate status
+    if (
+      !status ||
+      !["pending", "confirmed", "completed", "cancelled"].includes(status)
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Invalid status. Must be one of: pending, confirmed, completed, cancelled",
+        },
+        { status: 400 }
+      );
+    }
+
     // Connect to database
     await dbConnect();
 
-    // Find appointment by ID
-    const appointment = await Appointment.findById(id);
+    // Find appointment
+    const appointment = await Appointment.findById(appointmentId);
+
+    // Check if appointment exists
     if (!appointment) {
       return NextResponse.json(
         { error: "Appointment not found" },
@@ -87,43 +121,38 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       );
     }
 
-    // Check permissions based on the status change
-    const body = await req.json();
-    const { status, notes } = body;
+    // Check permissions
+    if (session.user.userType === "business") {
+      // Business users can only update appointments for their salons
+      const salons = await Salon.find({ owner: session.user.id }).select("_id");
+      const salonIds = salons.map((salon) => salon._id.toString());
 
-    let userHasPermission = false;
+      if (!salonIds.includes(appointment.salon.toString())) {
+        return NextResponse.json(
+          { error: "You don't have permission to update this appointment" },
+          { status: 403 }
+        );
+      }
+    } else {
+      // Customers can only cancel their own appointments
+      if (appointment.customer.toString() !== session.user.id) {
+        return NextResponse.json(
+          { error: "You don't have permission to update this appointment" },
+          { status: 403 }
+        );
+      }
 
-    // Customer can only cancel their own appointment
-    if (session.user.userType === "customer") {
-      if (
-        appointment.customer.toString() === session.user.id &&
-        status === "cancelled"
-      ) {
-        userHasPermission = true;
+      // Customers can only cancel appointments, not confirm or complete them
+      if (status !== "cancelled") {
+        return NextResponse.json(
+          { error: "Customers can only cancel appointments" },
+          { status: 403 }
+        );
       }
     }
-    // Business owner can confirm or complete appointments for their salons
-    else if (session.user.userType === "business") {
-      const salon = await Salon.findById(appointment.salon);
-      if (salon && salon.owner.toString() === session.user.id) {
-        if (status === "confirmed" || status === "completed") {
-          userHasPermission = true;
-        }
-      }
-    }
 
-    if (!userHasPermission) {
-      return NextResponse.json(
-        { error: "You do not have permission to update this appointment" },
-        { status: 403 }
-      );
-    }
-
-    // Update appointment
-    if (status) appointment.status = status;
-    if (notes !== undefined) appointment.notes = notes;
-
-    // Save updated appointment
+    // Update appointment status
+    appointment.status = status;
     await appointment.save();
 
     // Populate customer and salon fields for response
@@ -144,21 +173,27 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 }
 
 // DELETE endpoint to delete an appointment
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = params;
-
     // Get user session
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // Get appointment ID from URL parameter
+    const appointmentId = params.id;
+
     // Connect to database
     await dbConnect();
 
-    // Find appointment by ID
-    const appointment = await Appointment.findById(id);
+    // Find appointment
+    const appointment = await Appointment.findById(appointmentId);
+
+    // Check if appointment exists
     if (!appointment) {
       return NextResponse.json(
         { error: "Appointment not found" },
@@ -166,32 +201,43 @@ export async function DELETE(req: NextRequest, { params }: Params) {
       );
     }
 
-    // Check if user has permission to delete this appointment
-    let userHasPermission = false;
+    // Check permissions
+    if (session.user.userType === "business") {
+      // Business users can only delete appointments for their salons
+      const salons = await Salon.find({ owner: session.user.id }).select("_id");
+      const salonIds = salons.map((salon) => salon._id.toString());
 
-    // Customer can only delete their own appointment
-    if (session.user.userType === "customer") {
-      if (appointment.customer.toString() === session.user.id) {
-        userHasPermission = true;
+      if (!salonIds.includes(appointment.salon.toString())) {
+        return NextResponse.json(
+          { error: "You don't have permission to delete this appointment" },
+          { status: 403 }
+        );
       }
-    }
-    // Business owner can delete appointments for their salons
-    else if (session.user.userType === "business") {
-      const salon = await Salon.findById(appointment.salon);
-      if (salon && salon.owner.toString() === session.user.id) {
-        userHasPermission = true;
+    } else {
+      // Customers can only delete their own appointments
+      if (appointment.customer.toString() !== session.user.id) {
+        return NextResponse.json(
+          { error: "You don't have permission to delete this appointment" },
+          { status: 403 }
+        );
       }
-    }
 
-    if (!userHasPermission) {
-      return NextResponse.json(
-        { error: "You do not have permission to delete this appointment" },
-        { status: 403 }
-      );
+      // Check if appointment is within 24 hours
+      const appointmentDate = new Date(appointment.date);
+      const now = new Date();
+      const diffInHours =
+        (appointmentDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+      if (diffInHours < 24) {
+        return NextResponse.json(
+          { error: "Cannot delete appointments less than 24 hours in advance" },
+          { status: 403 }
+        );
+      }
     }
 
     // Delete appointment
-    await Appointment.findByIdAndDelete(id);
+    await Appointment.findByIdAndDelete(appointmentId);
 
     return NextResponse.json(
       { message: "Appointment deleted successfully" },

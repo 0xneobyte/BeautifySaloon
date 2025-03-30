@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
+import mongoose from "mongoose";
 import dbConnect from "@/lib/db";
 import Salon from "@/models/Salon";
+import Review from "@/models/Review";
 import { authOptions } from "@/lib/auth";
 
 interface Params {
@@ -18,15 +20,22 @@ export async function GET(req: NextRequest, { params }: Params) {
     // Connect to database
     await dbConnect();
 
-    // Find salon by ID
+    // Ensure Review model is registered
+    if (!mongoose.models.Review) {
+      require("@/models/Review");
+    }
+
+    // Find salon by ID without populating reviews
     const salon = await Salon.findById(id)
       .populate("owner", "firstName lastName email -_id")
-      .populate("reviews")
       .select("-__v");
 
     if (!salon) {
       return NextResponse.json({ error: "Salon not found" }, { status: 404 });
     }
+
+    // Fetch reviews separately if needed
+    // const reviews = await Review.find({ salon: id }).populate("customer", "firstName lastName -_id");
 
     return NextResponse.json({ salon }, { status: 200 });
   } catch (error: any) {

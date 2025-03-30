@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
+  const { isAuthenticated, logout, isBusinessUser, isCustomerUser } = useAuth();
+
   return (
     <nav className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,18 +44,41 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Link
-              href="/login"
-              className="text-gray-700 hover:text-pink-500 transition-colors"
-            >
-              login
-            </Link>
-            <Link
-              href="/signup"
-              className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition-colors"
-            >
-              Signup
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href={
+                    isBusinessUser
+                      ? "/dashboard/business"
+                      : "/dashboard/customer"
+                  }
+                  className="text-gray-700 hover:text-pink-500 transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => logout()}
+                  className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-gray-700 hover:text-pink-500 transition-colors"
+                >
+                  login
+                </Link>
+                <Link
+                  href="/signup"
+                  className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition-colors"
+                >
+                  Signup
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

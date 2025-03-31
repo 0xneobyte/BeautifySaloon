@@ -32,7 +32,7 @@ export async function GET(
     // Find appointment
     const appointment = await Appointment.findById(appointmentId)
       .populate("customer", "firstName lastName email -_id")
-      .populate("salon", "name address -_id");
+      .populate("salon", "name address city logo _id");
 
     // Check if appointment exists
     if (!appointment) {

@@ -215,12 +215,18 @@ export default function CustomerDashboard() {
                           </div>
 
                           <div className="flex gap-3">
-                            <Link
-                              href={`/salon/${appointment.salon._id}`}
-                              className="text-sm text-indigo-600 hover:text-indigo-500"
-                            >
-                              View Salon
-                            </Link>
+                            {appointment.salon && appointment.salon._id ? (
+                              <Link
+                                href={`/salon/${appointment.salon._id}`}
+                                className="text-sm text-indigo-600 hover:text-indigo-500"
+                              >
+                                View Salon
+                              </Link>
+                            ) : (
+                              <span className="text-sm text-gray-400 cursor-not-allowed">
+                                Salon Unavailable
+                              </span>
+                            )}
                             {appointment.status === "pending" && (
                               <button
                                 onClick={() =>
@@ -244,34 +250,138 @@ export default function CustomerDashboard() {
           {/* Recommended Salons Section */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                Recommended For You
-              </h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold">
+                  Recommended For <span className="text-pink-600">You</span>
+                </h2>
+                <Link
+                  href="/recommended"
+                  className="text-pink-600 hover:text-pink-700 font-medium flex items-center text-sm"
+                >
+                  View All Services
+                  <svg
+                    className="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </Link>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Link href="/hair-styles" className="group">
-                  <div className="aspect-w-1 aspect-h-1 bg-pink-100 rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-center h-full p-6 text-center group-hover:bg-pink-200 transition-colors">
-                      <span className="text-xl font-semibold text-pink-800">
-                        Hair Styling Services
-                      </span>
+                  <div className="relative rounded-lg overflow-hidden h-48">
+                    <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600 opacity-90 z-10"></div>
+                    <Image
+                      src="/images/hair.jpg"
+                      alt="Hair Styling"
+                      fill
+                      className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 text-white">
+                      <h3 className="text-xl font-bold mb-2">Hair Styling</h3>
+                      <p className="text-sm mb-4 opacity-90">
+                        Discover the latest hair trends and professional
+                        stylists
+                      </p>
+                      <div className="bg-white bg-opacity-30 p-2 rounded-lg backdrop-blur-sm inline-flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">
+                          Explore Services
+                        </span>
+                        <svg
+                          className="w-4 h-4 ml-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </Link>
+
                 <Link href="/nails" className="group">
-                  <div className="aspect-w-1 aspect-h-1 bg-pink-100 rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-center h-full p-6 text-center group-hover:bg-pink-200 transition-colors">
-                      <span className="text-xl font-semibold text-pink-800">
-                        Nail Care
-                      </span>
+                  <div className="relative rounded-lg overflow-hidden h-48">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-600 opacity-90 z-10"></div>
+                    <Image
+                      src="/images/nails.jpg"
+                      alt="Nail Care"
+                      fill
+                      className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 text-white">
+                      <h3 className="text-xl font-bold mb-2">Nail Care</h3>
+                      <p className="text-sm mb-4 opacity-90">
+                        Beautiful, healthy nails with professional treatments
+                      </p>
+                      <div className="bg-white bg-opacity-30 p-2 rounded-lg backdrop-blur-sm inline-flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">
+                          Explore Services
+                        </span>
+                        <svg
+                          className="w-4 h-4 ml-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </Link>
+
                 <Link href="/face-and-body" className="group">
-                  <div className="aspect-w-1 aspect-h-1 bg-pink-100 rounded-lg overflow-hidden">
-                    <div className="flex items-center justify-center h-full p-6 text-center group-hover:bg-pink-200 transition-colors">
-                      <span className="text-xl font-semibold text-pink-800">
-                        Face & Body Treatments
-                      </span>
+                  <div className="relative rounded-lg overflow-hidden h-48">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 opacity-90 z-10"></div>
+                    <Image
+                      src="/images/face.jpg"
+                      alt="Face & Body"
+                      fill
+                      className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 text-white">
+                      <h3 className="text-xl font-bold mb-2">Face & Body</h3>
+                      <p className="text-sm mb-4 opacity-90">
+                        Rejuvenate with our comprehensive face and body
+                        treatments
+                      </p>
+                      <div className="bg-white bg-opacity-30 p-2 rounded-lg backdrop-blur-sm inline-flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">
+                          Explore Services
+                        </span>
+                        <svg
+                          className="w-4 h-4 ml-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </Link>

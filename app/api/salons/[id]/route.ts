@@ -17,6 +17,22 @@ export async function GET(req: NextRequest, { params }: Params) {
   try {
     const { id } = params;
 
+    // Check if ID is undefined or not valid
+    if (!id || id === "undefined") {
+      return NextResponse.json(
+        { error: "Invalid salon ID provided" },
+        { status: 400 }
+      );
+    }
+
+    // Validate if the ID is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: "Invalid salon ID format" },
+        { status: 400 }
+      );
+    }
+
     // Connect to database
     await dbConnect();
 

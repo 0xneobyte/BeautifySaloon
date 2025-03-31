@@ -96,14 +96,34 @@ export default function SalonProfile() {
       <main>
         <Navbar />
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-500 mb-4">Error</h1>
-            <p>{error || "Salon not found"}</p>
+          <div className="text-center max-w-md p-8 bg-white rounded-xl shadow-md">
+            <svg
+              className="w-20 h-20 text-red-500 mx-auto mb-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">
+              Salon Not Found
+            </h1>
+            <p className="text-gray-600 mb-6">
+              {error?.includes("ObjectId failed")
+                ? "The salon ID you're looking for appears to be invalid."
+                : error ||
+                  "We couldn't find the salon you're looking for. It may have been removed or the link is incorrect."}
+            </p>
             <Link
               href="/"
-              className="text-pink-500 hover:underline mt-4 inline-block"
+              className="bg-pink-500 text-white px-6 py-3 rounded-full font-medium hover:bg-pink-600 transition-colors shadow-md inline-block"
             >
-              Return to home
+              Return to Home
             </Link>
           </div>
         </div>

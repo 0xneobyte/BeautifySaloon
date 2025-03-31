@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
     // Get appointments from database
     const appointments = await Appointment.find(query)
       .populate("customer", "firstName lastName email -_id")
-      .populate("salon", "name address -_id")
+      .populate("salon", "name address city logo _id")
       .sort({ date: 1, startTime: 1 });
 
     return NextResponse.json({ appointments }, { status: 200 });
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
 
     // Populate customer and salon fields for response
     await appointment.populate("customer", "firstName lastName email -_id");
-    await appointment.populate("salon", "name address -_id");
+    await appointment.populate("salon", "name address city logo _id");
 
     return NextResponse.json(
       { message: "Appointment created successfully", appointment },

@@ -165,29 +165,35 @@ export default function Appointment() {
   return (
     <main>
       <Navbar />
-      <div className="min-h-[calc(100vh-4rem)] bg-pink-50 py-12">
+      <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-pink-50 to-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-center mb-8">
+          <h1 className="text-4xl font-extrabold text-center mb-4 text-gray-800">
             {salon
               ? `Book Appointment at ${salon.name}`
-              : "Make an Appointment Hair Services & Styling"}
+              : "Schedule Your Beauty Treatment"}
           </h1>
+          <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+            Select your preferred date, time, and service to book your next
+            beauty appointment with our experienced professionals.
+          </p>
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-pink-500"></div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               {/* Calendar Section */}
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-semibold mb-4">Select Date</h2>
-                <div className="mb-6">
-                  <div className="bg-white rounded-lg shadow">
-                    <div className="flex items-center justify-between p-4">
-                      <button className="p-2 hover:bg-gray-100 rounded-full">
+              <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all hover:scale-[1.01] duration-300">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
+                  Select Date & Time
+                </h2>
+                <div className="mb-8">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-t-xl">
+                      <button className="p-2 hover:bg-white hover:shadow-md rounded-full transition-all">
                         <svg
-                          className="w-5 h-5"
+                          className="w-5 h-5 text-gray-700"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -200,10 +206,12 @@ export default function Appointment() {
                           />
                         </svg>
                       </button>
-                      <h3 className="text-lg font-semibold">{month}</h3>
-                      <button className="p-2 hover:bg-gray-100 rounded-full">
+                      <h3 className="text-xl font-bold text-gray-800">
+                        {month}
+                      </h3>
+                      <button className="p-2 hover:bg-white hover:shadow-md rounded-full transition-all">
                         <svg
-                          className="w-5 h-5"
+                          className="w-5 h-5 text-gray-700"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -217,18 +225,18 @@ export default function Appointment() {
                         </svg>
                       </button>
                     </div>
-                    <div className="border-t">
+                    <div>
                       <div className="grid grid-cols-7 gap-px">
                         {["S", "M", "T", "W", "T", "F", "S"].map((day) => (
                           <div
                             key={day}
-                            className="text-center py-2 text-sm font-semibold"
+                            className="text-center py-3 text-sm font-bold text-gray-600"
                           >
                             {day}
                           </div>
                         ))}
                       </div>
-                      <div className="grid grid-cols-7 gap-px bg-gray-200">
+                      <div className="grid grid-cols-7 gap-px bg-white">
                         {days.map((day) => {
                           const today = new Date();
                           const isToday = day === today.getDate();
@@ -241,9 +249,13 @@ export default function Appointment() {
                             <button
                               key={day}
                               onClick={() => handleDateSelect(day)}
-                              className={`bg-white p-2 hover:bg-pink-50 focus:outline-none ${
-                                isSelected ? "bg-pink-100 font-bold" : ""
-                              } ${isToday ? "border border-pink-500" : ""}`}
+                              className={`py-3 hover:bg-pink-50 focus:outline-none transition-colors ${
+                                isSelected
+                                  ? "bg-pink-100 font-bold text-pink-700"
+                                  : "text-gray-700"
+                              } ${
+                                isToday ? "ring-2 ring-pink-400 ring-inset" : ""
+                              }`}
                             >
                               <time dateTime={dateStr} className="text-sm">
                                 {day}
@@ -256,19 +268,19 @@ export default function Appointment() {
                   </div>
                 </div>
 
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">
+                <div className="mt-10">
+                  <h3 className="text-xl font-bold mb-6 text-gray-800 border-b pb-2">
                     Available Time Slots
                   </h3>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-3">
                     {availableTimes.map((time) => (
                       <button
                         key={time}
                         onClick={() => handleTimeSelect(time)}
-                        className={`py-2 px-4 text-sm border rounded-lg hover:bg-pink-50 focus:outline-none ${
+                        className={`py-3 px-4 text-sm rounded-xl transition-all duration-200 ${
                           selectedTime === time
-                            ? "bg-pink-100 border-pink-500 font-bold"
-                            : ""
+                            ? "bg-pink-500 text-white font-bold shadow-md transform -translate-y-1"
+                            : "bg-white border border-gray-200 text-gray-700 hover:border-pink-300 hover:shadow"
                         }`}
                       >
                         {time}
@@ -279,29 +291,48 @@ export default function Appointment() {
               </div>
 
               {/* Service Selection Section */}
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-semibold mb-4">
+              <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all hover:scale-[1.01] duration-300">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
                   Choose Your Beauty Treatment
                 </h2>
 
                 {!salon ? (
-                  <div className="text-center py-8 text-red-600">
-                    Please select a salon first
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <svg
+                      className="w-16 h-16 text-pink-300 mb-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <p className="text-lg text-red-500 font-semibold mb-2">
+                      Please select a salon first
+                    </p>
+                    <p className="text-gray-500 max-w-xs">
+                      You need to select a salon before booking an appointment.
+                      Visit our salons page to find the perfect match.
+                    </p>
                   </div>
                 ) : (
                   <>
-                    <div className="grid grid-cols-1 gap-4 mb-6">
+                    <div className="grid grid-cols-1 gap-4 mb-8">
                       <div
                         onClick={() => handleCategorySelect("Hair Styling")}
-                        className={`relative rounded-lg overflow-hidden h-24 cursor-pointer ${
+                        className={`relative rounded-xl overflow-hidden h-28 cursor-pointer transition-all duration-300 ${
                           selectedCategory === "Hair Styling"
-                            ? "ring-2 ring-pink-500"
-                            : ""
+                            ? "ring-4 ring-pink-500 transform scale-[1.02]"
+                            : "hover:shadow-lg"
                         }`}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-pink-300 to-pink-500"></div>
-                        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                          <div className="px-6 py-2 bg-white text-gray-900 rounded-full">
+                        <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-pink-600"></div>
+                        <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                          <div className="px-6 py-2 bg-white text-gray-900 rounded-full font-bold shadow-md">
                             Hair Style
                           </div>
                         </div>
@@ -309,15 +340,15 @@ export default function Appointment() {
 
                       <div
                         onClick={() => handleCategorySelect("Nails")}
-                        className={`relative rounded-lg overflow-hidden h-24 cursor-pointer ${
+                        className={`relative rounded-xl overflow-hidden h-28 cursor-pointer transition-all duration-300 ${
                           selectedCategory === "Nails"
-                            ? "ring-2 ring-pink-500"
-                            : ""
+                            ? "ring-4 ring-purple-500 transform scale-[1.02]"
+                            : "hover:shadow-lg"
                         }`}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-300 to-purple-500"></div>
-                        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                          <div className="px-6 py-2 bg-white text-gray-900 rounded-full">
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-purple-600"></div>
+                        <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                          <div className="px-6 py-2 bg-white text-gray-900 rounded-full font-bold shadow-md">
                             Nails
                           </div>
                         </div>
@@ -325,15 +356,15 @@ export default function Appointment() {
 
                       <div
                         onClick={() => handleCategorySelect("Face and Body")}
-                        className={`relative rounded-lg overflow-hidden h-24 cursor-pointer ${
+                        className={`relative rounded-xl overflow-hidden h-28 cursor-pointer transition-all duration-300 ${
                           selectedCategory === "Face and Body"
-                            ? "ring-2 ring-pink-500"
-                            : ""
+                            ? "ring-4 ring-blue-500 transform scale-[1.02]"
+                            : "hover:shadow-lg"
                         }`}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-500"></div>
-                        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                          <div className="px-6 py-2 bg-white text-gray-900 rounded-full">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600"></div>
+                        <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                          <div className="px-6 py-2 bg-white text-gray-900 rounded-full font-bold shadow-md">
                             Face and Body
                           </div>
                         </div>
@@ -341,46 +372,72 @@ export default function Appointment() {
                     </div>
 
                     {selectedCategory && (
-                      <div>
-                        <h3 className="text-lg font-semibold mb-2">
+                      <div className="mt-6">
+                        <h3 className="text-xl font-bold mb-4 text-gray-800">
                           Select Service
                         </h3>
-                        <div className="space-y-2 max-h-64 overflow-y-auto">
-                          {salon.services
-                            .filter(
-                              (service) => service.category === selectedCategory
-                            )
-                            .map((service, index) => (
-                              <div
-                                key={index}
-                                onClick={() => setSelectedService(service)}
-                                className={`p-3 border rounded-lg cursor-pointer hover:bg-pink-50 ${
-                                  selectedService &&
-                                  selectedService.name === service.name
-                                    ? "bg-pink-100 border-pink-500"
-                                    : ""
-                                }`}
-                              >
-                                <div className="flex justify-between items-center">
-                                  <div>
-                                    <p className="font-medium">
-                                      {service.name}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                      {service.minDuration} min
-                                    </p>
+                        <div className="space-y-3 max-h-64 overflow-y-auto pr-2 styled-scrollbar">
+                          {salon.services.filter(
+                            (service) => service.category === selectedCategory
+                          ).length === 0 ? (
+                            <p className="text-center py-8 text-gray-500">
+                              No services available in this category
+                            </p>
+                          ) : (
+                            salon.services
+                              .filter(
+                                (service) =>
+                                  service.category === selectedCategory
+                              )
+                              .map((service, index) => (
+                                <div
+                                  key={index}
+                                  onClick={() => setSelectedService(service)}
+                                  className={`p-4 border rounded-xl cursor-pointer transition-all duration-200 ${
+                                    selectedService &&
+                                    selectedService.name === service.name
+                                      ? "bg-gradient-to-r from-pink-50 to-pink-100 border-pink-300 shadow-md transform -translate-y-1"
+                                      : "hover:border-pink-200 hover:shadow"
+                                  }`}
+                                >
+                                  <div className="flex justify-between items-center">
+                                    <div>
+                                      <p className="font-bold text-gray-800">
+                                        {service.name}
+                                      </p>
+                                      <div className="flex items-center mt-1">
+                                        <svg
+                                          className="w-4 h-4 text-gray-400 mr-1"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                          />
+                                        </svg>
+                                        <p className="text-sm text-gray-500">
+                                          {service.minDuration} min
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="text-right">
+                                      <p className="font-bold text-lg text-pink-600">
+                                        ${service.price}
+                                      </p>
+                                    </div>
                                   </div>
-                                  <p className="font-semibold">
-                                    ${service.price}
-                                  </p>
                                 </div>
-                              </div>
-                            ))}
+                              ))
+                          )}
                         </div>
                       </div>
                     )}
 
-                    <div className="mt-6">
+                    <div className="mt-10">
                       <button
                         onClick={handleSubmit}
                         disabled={
@@ -389,16 +446,42 @@ export default function Appointment() {
                           !selectedService ||
                           submitting
                         }
-                        className={`w-full py-3 rounded-lg font-medium text-white ${
+                        className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
                           !selectedDate ||
                           !selectedTime ||
                           !selectedService ||
                           submitting
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-pink-500 hover:bg-pink-600"
+                            ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                            : "bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-lg hover:shadow-xl hover:from-pink-600 hover:to-pink-700 transform hover:-translate-y-1"
                         }`}
                       >
-                        {submitting ? "Processing..." : "Book Appointment"}
+                        {submitting ? (
+                          <span className="flex items-center justify-center">
+                            <svg
+                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
+                            </svg>
+                            Processing...
+                          </span>
+                        ) : (
+                          "Book Appointment"
+                        )}
                       </button>
                     </div>
                   </>

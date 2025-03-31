@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import SalonSearchForm from "../components/SalonSearchForm";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function HairStyles() {
   return (
@@ -8,20 +9,119 @@ export default function HairStyles() {
       <Navbar />
 
       {/* Hero Section with Search Form */}
-      <section className="relative bg-pink-50 py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              Find the Perfect Hair Salon
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover top-rated hair salons for all your styling needs. From
-              cuts and colors to blowouts and treatments.
-            </p>
-          </div>
+      <section className="bg-pink-400 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 py-12 lg:py-16 items-center">
+            <div className="text-white max-w-xl">
+              <h1 className="text-6xl font-bold mb-6 leading-tight">
+                Find Your Perfect Hair style!
+              </h1>
+              <p className="text-2xl mb-8">
+                Explore, Choose, and Transform – Your Ideal Look Awaits!
+              </p>
 
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <SalonSearchForm category="hair" buttonText="Find Hair Salons" />
+              {/* Search Form */}
+              <div className="bg-white p-8 rounded-3xl shadow-lg">
+                <h2 className="text-pink-600 text-xl font-semibold mb-6">
+                  Search and Find The Best Solution For Your need
+                </h2>
+
+                <div className="space-y-4">
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="Search by Saloon Name"
+                      className="w-full pl-10 pr-4 py-3 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-gray-800"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="Search by location"
+                        className="w-full pl-10 pr-4 py-3 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-gray-800"
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="Search by Postcode"
+                        className="w-full pl-10 pr-4 py-3 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-gray-800"
+                      />
+                    </div>
+                  </div>
+
+                  <Link
+                    href="/search?category=hair"
+                    className="bg-pink-600 text-white text-center w-full block py-3 px-6 rounded-full font-medium hover:bg-pink-700 transition-colors shadow-md hover:shadow-lg"
+                  >
+                    Search
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full h-full flex justify-end items-end">
+              <img
+                src="/images/hero-woman.png"
+                alt="Beautiful hairstyle"
+                className="w-[80%] h-[500px] object-cover rounded-tl-3xl"
+                style={{ objectPosition: "right bottom" }}
+              />
+            </div>
           </div>
         </div>
       </section>

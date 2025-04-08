@@ -152,8 +152,8 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link
-                  href="/signup/customer"
-                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-sm hover:shadow transition-all text-sm font-medium"
+                  href="/signup"
+                  className="text-gray-600 hover:text-pink-500 transition-colors"
                 >
                   Sign Up
                 </Link>
@@ -293,8 +293,8 @@ const Navbar = () => {
                 Login
               </Link>
               <Link
-                href="/signup/customer"
-                className="bg-pink-500 text-white block px-3 py-2 rounded-md text-base font-medium"
+                href="/signup"
+                className="text-gray-600 hover:text-pink-500 transition-colors block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Sign Up
